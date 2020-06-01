@@ -28,6 +28,7 @@
 #include <time.h>
 
 #include <arpa/inet.h>
+#include <ctype.h>
 #include <errno.h>
 #include <netinet/in.h>
 #include <stdarg.h>
@@ -678,6 +679,14 @@ unsigned lastdump = 0;
 #define MYWM_NOTIFYICON (WM_USER+2)
 int program_hidden = 1;
 
+// strupr implementation
+char *strupr(char *s) {
+	for(char *tmp = s; *tmp != '\0'; ++tmp) {
+		*tmp = tolower(*tmp);
+	}
+	return s;
+}
+
 void WriteLog(char *fmt, ...)
 {
 #define MAX_GM_MESG_LEN 4096
@@ -815,13 +824,19 @@ void construct0xEB()
 	while ( fgets ( &EBFiles[ch][0], 255, fp ) != NULL )
 	{
 		ch2 = strlen (&EBFiles[ch][0]);
-		if (EBFiles[ch][ch2-1] == 0x0A)
-			EBFiles[ch][ch2--]  = 0x00;
+
+		if(EBFiles[ch][ch2-2] == '\r') {
+			EBFiles[ch][ch2-2] = '\0';
+		} else if(EBFiles[ch][ch2-1] == '\n') {
+			EBFiles[ch][ch2-1] = '\0';
+		}
+
 		EBFiles[ch][ch2] = 0;
 		printf ("\nLoading data from %s ... ", &EBFiles[ch][0]);
 		if ( ( fpb = fopen (&EBFiles[ch][0], "rb") ) == NULL )
 		{
 			printf ("Could not open %s!\n", &EBFiles[ch][0]);
+			printf ("Length = %d\n", strlen(EBFiles[ch]));
 			exit (1);
 		}
 		fseek (fpb, 0, SEEK_END);
@@ -5250,13 +5265,13 @@ void LoadDropData()
 					switch (ch)
 					{
 					case 0x01:
-						strcat (&id_file[0], "drop\\ep1_mob_");
+						strcat (id_file, "drop/ep1_mob_");
 						break;
 					case 0x02:
-						strcat (&id_file[0], "drop\\ep2_mob_");
+						strcat (id_file, "drop/ep2_mob_");
 						break;
 					case 0x04:
-						strcat (&id_file[0], "drop\\ep4_mob_");
+						strcat (id_file, "drop/ep4_mob_");
 						break;
 					}
 					sprintf(convert_ch, "%d", d);
@@ -5269,7 +5284,7 @@ void LoadDropData()
 					fp = fopen ( &id_file[0], "r" );
 					if (!fp)
 					{
-						printf ("Drop table not found \"%s\"", id_file[0] );
+						printf ("Drop table not found \"%s\"\n", id_file);
 						exit   (1);
 					}
 					look_rate = 1;
@@ -5286,7 +5301,7 @@ void LoadDropData()
 							{
 								if ( strlen ( &dp[0] ) < 6 )
 								{
-									printf ("Corrupted drop table \"%s\"", id_file[0] );
+									printf ("Corrupted drop table \"%s\"", id_file);
 									exit   (1);
 								}
 								strupr(&dp[0]);
@@ -5306,7 +5321,7 @@ void LoadDropData()
 					fp = fopen ( &id_file[0], "r" );
 					if (!fp)
 					{
-						printf ("Drop table not found \"%s\"", id_file[0] );
+						printf ("Drop table not found \"%s\"", id_file);
 						exit   (1);
 					}
 					look_rate = 0;
@@ -5327,7 +5342,7 @@ void LoadDropData()
 							case 0x02:
 								if ( strlen ( &dp[0] ) < 6 )
 								{
-									printf ("Corrupted drop table \"%s\"", id_file[0] );
+									printf ("Corrupted drop table \"%s\"", id_file);
 									exit   (1);
 								}
 								strupr(&dp[0]);
