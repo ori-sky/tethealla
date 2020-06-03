@@ -4,4 +4,4 @@ project(tethealla)
 
 add_subdirectory(md5)
 add_subdirectory(prs)
-add_subdirectory(login_server)
+add_subdirectory(logind)

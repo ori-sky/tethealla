@@ -1,2 +1,3 @@
 # tethealla
-Tethealla Fork
+
+This is a fork of Tethealla.
