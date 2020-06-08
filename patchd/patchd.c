@@ -1406,6 +1406,8 @@ int main( int argc, char * argv[] )
 						}
 						else
 						{
+							printf("received packet of size %d\n", pkt_len);
+
 							workConnect->fromBytesSec += (unsigned) pkt_len;
 							// Work with it.
 							for (pkt_c=0;pkt_c<pkt_len;pkt_c++)
