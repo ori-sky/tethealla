@@ -682,6 +682,8 @@ void DataProcessPacket (BANANA* client)
 {
 	unsigned patch_index;
 
+	printf("received data packet 0x%x\n", client->decryptbuf[0x02]);
+
 	switch (client->decryptbuf[0x02])
 	{
 	case 0x02:
@@ -717,6 +719,8 @@ void DataProcessPacket (BANANA* client)
 
 void PatchProcessPacket (BANANA* client)
 {
+	printf("received patch packet 0x%x\n", client->decryptbuf[0x02]);
+
 	switch (client->decryptbuf[0x02])
 	{
 	case 0x02:
