@@ -676,6 +676,8 @@ void Send13 (BANANA* client)
 	client->encryptbuf[0x09] = port[0];
 	cipher_ptr = &client->server_cipher;
 	encryptcopy (client, &client->encryptbuf[0x00], 0x0C);
+
+	printf("Sending welcome packet: serverIP = %d.%d.%d.%d serverPort = %d\n", (int)serverIP[0], (int)serverIP[1], (int)serverIP[2], (int)serverIP[3], serverPort);
 }
 
 void DataProcessPacket (BANANA* client)
